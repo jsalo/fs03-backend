@@ -25,6 +25,7 @@ app.get('/', (request, response) => {
 
 app.get('/info', (request, response) => {
     const currentTime = new Date().toString()
+    const persons = Person.
     response.send(`<h1>Phonebook has ${persons.length} people</h1><div>${currentTime}</div>`)
 })
 
@@ -71,28 +72,29 @@ app.post('/api/persons', (request, response, next) => {
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     console.log('GET /api/persons/', id)
-    const person = persons.find(person => person.id === id)
-    if (person) {
-        console.log('response:', person)
-        response.json(person)
-    } else {
-        console.log('404')
-        response.status(404).end()
-    }
+    Person.findById(id)
+        .then((person) => {
+        if (person) {
+            res.json(person)
+        } else {
+            res.status(404).end()
+        }
+    })
+    .catch((error) => next(error))
 })
 
-app.delete('/api/notes/:id', (request, response) => {
+
+app.delete("/api/persons/:id", (req, res, next) => {
     const id = Number(request.params.id)
     console.log('DELETE /api/persons/', id)
-    person = persons.filter(person => person.id !== id)
-    if (person.length) {
-        console.log('204')
-        response.status(204).end()
-    } else {
-        console.log('404')
-        response.status(404).end()
-    }
+    Person.findByIdAndRemove(id)
+        .then(() => {
+            res.status(204).end()
+        })
+        .catch((error) => next(error))
 })
+
+
 
 const errorHandler = (error, request, response) => {
     console.log('ERROR', error, request, response)
