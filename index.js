@@ -23,12 +23,6 @@ app.get('/', (request, response) => {
   response.send('<h1>Phonebook API is here</h1>')
 })
 
-app.get('/info', (request, response) => {
-    const currentTime = new Date().toString()
-    const persons = Person.
-    response.send(`<h1>Phonebook has ${persons.length} people</h1><div>${currentTime}</div>`)
-})
-
 app.get('/api/persons', (request, response) => {
     console.log('GET /api/persons/')
     Person.find({}).then(person => {
