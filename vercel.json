@@ -1,0 +1,10 @@
+{
+    "version": 1,
+    "name": "jsalo-fs03-phonebook-service",
+    "builds": [
+       { "src": "indexjs", "use": "@vercel/node" }
+    ],
+    "routes": [
+       { "src": "/(.*)", "dest": "/index.js" }
+    ]
+ }
