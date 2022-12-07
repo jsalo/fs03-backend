@@ -13,6 +13,7 @@ app.use(express.json())
 app.use(cors())
 
 
+
 morgan.token('bodyToken', function (request) {
     //console.log('morgan token for body', request.body)
     return JSON.stringify(request.body)
@@ -38,68 +39,69 @@ app.get('/api/persons/:id', (request, response) => {
         .then(person => {
             response.json(person)
         })
-        .catch(error => {
-            console.log(error)
-        })
+        .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response, next) => {
     const { name, number } = request.body
     console.log('POST /api/persons/', name, number)
     if (!name || !number) {
-      return response.status(400).json({ 
-        error: 'Name and number are required.' 
-        }).end()
+        return response.status(400).json({ error: 'Name or number missing.' }).end()
     }
     const person = new Person({ name, number })
     person.save()
         .then(newPerson => {
             response.json(newPerson)
         })
-        .catch(error =>  {
-            console.log('Error saving person:', error)
-            next(error)
-        })
+        .catch(error =>  next(error))
 })
 
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    console.log('GET /api/persons/', id)
-    Person.findById(id)
+    console.log('GET /api/persons/', request.params.id)
+    Person.findById(request.params.id)
         .then((person) => {
-        if (person) {
-            res.json(person)
-        } else {
-            res.status(404).end()
-        }
-    })
-    .catch((error) => next(error))
+            if (person) {
+                res.json(person)
+            } else {
+                console.log('Could not find:', request.params.id)
+                response.status(404).end()
+            }
+        })
+        .catch(error => next(error))
 })
 
 
-app.delete("/api/persons/:id", (req, res, next) => {
-    const id = Number(request.params.id)
-    console.log('DELETE /api/persons/', id)
-    Person.findByIdAndRemove(id)
+app.delete("/api/persons/:id", (request, response, next) => {
+    console.log('DELETE /api/persons/',request.params.id)
+    Person.findByIdAndRemove(request.params.id)
         .then(() => {
-            res.status(204).end()
+            response.status(204).end()
         })
         .catch((error) => next(error))
 })
 
 
 
-const errorHandler = (error, request, response) => {
-    console.log('ERROR', error, request, response)
-    return response.status(400).json({ error: error.message })
-}
-app.use(errorHandler)
 
 const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
+    console.log('unknownEndpoint', request.url)
+    response.status(404).send({ error: 'Unknown endpoint' })
 }
 app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+    console.log('errorHandler', error, request)
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'Invalid id format' })
+    } else if (error.name === 'ValidationError') {
+      return response.status(400).json({ error: error.message })
+    } else {
+        console.log('errorHandler unexpexted error:', error.name)
+    }
+    next(error)
+}
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
