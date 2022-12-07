@@ -10,9 +10,9 @@ const app = express()
 
 app.use(express.static('build'))
 app.use(express.json())
-app.use(cors())
-
-
+app.use(cors({
+    origin: '*'
+}))
 
 morgan.token('bodyToken', function (request) {
     //console.log('morgan token for body', request.body)
