@@ -3,21 +3,16 @@
 require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
-const allowCors = require('allowCors')
-
-/*const cors = require('cors')*/
+const cors = require('cors')
 const Person = require('./models/person')
 
 const app = express()
 
 app.use(express.static('build'))
 app.use(express.json())
-app.use(allowCors);
-/*
 app.use(cors({
     origin: '*'
 }))
-*/
 
 morgan.token('bodyToken', function (request) {
     //console.log('morgan token for body', request.body)
