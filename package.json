@@ -1,28 +1,31 @@
 {
-  "name": "osa3",
+  "name": "fs03-backend",
   "version": "1.0.0",
-  "description": "Full stack 2022 osa 3 harjoitustehtävät",
+  "description": "Fullstack 2022 exercises, chapted 3: phonebook services",
   "main": "index.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsalo/fs03-backend.git"
   },
   "author": "Jouni Salo",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jsalo/fs03-backend/issues"
+  },
+  "homepage": "https://github.com/jsalo/fs03-backend#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
-    "micro": "^10.0.1",
-    "micro-cors": "^0.1.1",
     "mongodb": "^4.12.1",
-    "mongoose": "^6.7.3",
+    "mongoose": "^6.8.0",
     "morgan": "^1.10.0",
     "path": "^0.12.7"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.20"
   }
 }
